@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accelerometer Test", "Accelerometer Test.csproj", "{66A12820-8B83-CD71-BEBD-292D90CE6A05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66A12820-8B83-CD71-BEBD-292D90CE6A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A12820-8B83-CD71-BEBD-292D90CE6A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A12820-8B83-CD71-BEBD-292D90CE6A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A12820-8B83-CD71-BEBD-292D90CE6A05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
