@@ -7,15 +7,22 @@ public class Node
 {
     public Vector3 position = new Vector3();
     public Dictionary<direction, Node> neighbors = new Dictionary<direction, Node>();
+    public int row;
+    public int col;
 
-    public Node(Vector3 p)
+   
+
+    public Node(int r, int c, Vector3 offset=new Vector3())
     {
-        position = p;       
+        row = r;
+        col = c;
+        position = new Vector3(c, -r, 0) + offset;       
     }
 
     public void AddNeighbor(Node node, direction D)
     {
-        neighbors.Add(D, node);
+        if(node != null)
+            neighbors.Add(D, node);
     }
     
 }

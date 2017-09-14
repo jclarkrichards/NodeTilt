@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
 public enum direction
 {
     RIGHT,
@@ -9,13 +10,14 @@ public enum direction
     UP,
     DOWN, 
     NONE
-}
+}*/
 
 // This is basically the NodeGroup class
 public class AccelerometerTilt : MonoBehaviour
 {
-    public GameObject[] nodesObjects;
-    Node[] nodes; // Contains all of the nodes
+    //public GameObject[] nodesObjects;
+    
+    //Node[] nodes; // Contains all of the nodes
     direction dir = direction.NONE;
     Vector3 dirvec = new Vector3();
     Node node;
@@ -24,21 +26,21 @@ public class AccelerometerTilt : MonoBehaviour
     bool overshot_target = true;
 
 	// Use this for initialization
-	void Awake ()
+	void Start ()
     {
-        //transform.position = nodes[4].transform.position;
-        nodes = new Node[nodesObjects.Length];
-        //print(nodes.Length);
-        LinkNodes();
-        int nodeVal = 2;
-        transform.position = nodes[nodeVal].position;
-        node = nodes[nodeVal];
-        target = nodes[nodeVal];
+        print("So many nodes to choose from");
+        print(NodeGroup.S.nodelist.Count);
+        node = NodeGroup.S.nodelist[0];
+        target = NodeGroup.S.nodelist[0];
+        transform.position = node.position;
+     
 	}
 	
 	// Update is called once per frame
+
 	void Update ()
     {
+        
         tiltDirection = GetTiltDirection();  // Direction the player is indicating
         
         // If we are stopped on a Node
@@ -48,6 +50,8 @@ public class AccelerometerTilt : MonoBehaviour
             {
                 dir = tiltDirection;
                 target = node.neighbors[tiltDirection];
+                print("new target acquired");
+                print(target.position);
             }
         }
         else // We are moving from a node to another node
@@ -63,14 +67,17 @@ public class AccelerometerTilt : MonoBehaviour
             }
         }
         
-
+        
         if(OvershotTarget())
         {
+            
+            
             node = target;
             // Should we continue in this direction or stop?
             // The direction we are tilting takes precedence
             if(node.neighbors.ContainsKey(tiltDirection))
             {
+                print("Tilt direction!");
                 transform.position = node.position;
                 dir = tiltDirection;
                 target = node.neighbors[tiltDirection];
@@ -79,27 +86,28 @@ public class AccelerometerTilt : MonoBehaviour
             {
                 if(node.neighbors.ContainsKey(dir))
                 {
+                    print("Keep going!");
                     target = node.neighbors[dir];
                 }
                 else
                 {
+                    print("STOP!");
                     transform.position = node.position;
                     dir = direction.NONE;
                 }
             }
             //transform.position = node.position;
             //dir = direction.NONE;
+            
         }
 
 
-
+        
         //print(xAxis + "   " + yAxis);
         dirvec = GetDirectionVector(dir);
         Vector3 pos = transform.position;
         pos += dirvec * 2 * Time.deltaTime;
         transform.position = pos;
-        
-        //transform.Translate(Input.acceleration.x, Input.acceleration.y, 0);
 		
 	}
 
@@ -125,7 +133,7 @@ public class AccelerometerTilt : MonoBehaviour
     direction GetTiltDirection()
     {
         //For testing the tilt on this computer, comment out when deploying to the tablet
-        /*
+        
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
         if (xAxis > 0) { return direction.RIGHT; }
@@ -133,9 +141,9 @@ public class AccelerometerTilt : MonoBehaviour
         else if (yAxis > 0) { return direction.UP; }
         else if (yAxis < 0) { return direction.DOWN; }
         else { return direction.NONE; }
-        */
-        //Uncomment when deploying to the tablet.  
         
+        //Uncomment when deploying to the tablet.  
+        /*
         if(Mathf.Abs(Input.acceleration.x) > Mathf.Abs(Input.acceleration.y))
         {
             if(Input.acceleration.x > 0)
@@ -159,12 +167,12 @@ public class AccelerometerTilt : MonoBehaviour
                 return direction.DOWN;
             }
         }
-        
+        */
     }
 
     void LinkNodes()
     {
-        
+        /*
         for(int i=0; i<nodesObjects.Length; i++)
         {
             nodes[i] = new Node(nodesObjects[i].transform.position);
@@ -192,5 +200,6 @@ public class AccelerometerTilt : MonoBehaviour
 
         nodes[6].AddNeighbor(nodes[4], direction.UP);
         nodes[6].AddNeighbor(nodes[5], direction.LEFT);
+        */
     }
 }
