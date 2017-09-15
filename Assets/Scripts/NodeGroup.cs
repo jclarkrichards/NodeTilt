@@ -15,9 +15,10 @@ public class NodeGroup : MonoBehaviour
 {
     public static NodeGroup S;
     public GameObject nodePrefab;
+    public GameObject wallPrefab;
     LevelLayout level = new LevelLayout();
     public List<Node> nodelist = new List<Node>();
-    Vector3 offset = new Vector3(-4, 4, 0);
+    Vector3 offset = new Vector3();//-13.5f, -16, 0);
     Stack<Node> nodestack = new Stack<Node>();
     public char[,] levelArray;
 
@@ -30,12 +31,27 @@ public class NodeGroup : MonoBehaviour
         print(level.levelArray.GetLength(0) + "   " + level.levelArray.GetLength(1));
         //CreateUnlinkedNodelist();
         CreateLinkedNodelist();
+        DrawMazeBackground();
         ShowNodes();
-        print("Screen width and height");
-        print(Screen.width);
-        print(Screen.height);
+        //print("Screen width and height");
+        //print(Screen.width);
+        //print(Screen.height);
+        //print("World to screen points");
+        //print(Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0)));
+        //print(Camera.main.WorldToScreenPoint(new Vector3(1, 1, 0)));
+        print("Camera size");
+        print(Camera.main.orthographicSize);
+        print("Aspect = " + Camera.main.aspect);
+        print("Height = " + Camera.main.orthographicSize * 2f);
+        print("Width = " + Camera.main.orthographicSize * 2f * Camera.main.aspect);
+        float newSize = 28 / (2f * Camera.main.aspect);
+        Camera.main.orthographicSize = newSize;
+        Camera.main.transform.position = new Vector3(13.5f, -newSize/1.25f, -10);
+
+        //print(Screen.height + "  " + Camera.main.orthographicSize * 2f);
         
-	}
+        
+    }
 	
 	
 	void Update ()
@@ -251,27 +267,30 @@ public class NodeGroup : MonoBehaviour
         //print(Camera.main.WorldToViewportPoint(new Vector3(27, 28, 0)));
         //print("\n");
 
-        Vector3 temp = Camera.main.WorldToScreenPoint(new Vector3(col, row, 0)+offset) / 4.30f;
+        Vector3 temp = Camera.main.WorldToScreenPoint(new Vector3(col, row, 0) + offset);// / 4.30f;
         Vector3 temp2 = Camera.main.ScreenToWorldPoint(temp);
         return new Node(temp2.x, temp2.y, row, col);
         //return new Node(row, col, offset);
-        DrawLine(new Vector3(), new Vector3(2, 2, 0), Color.red);
-        //Debug.DrawLine(Vector3.zero, new Vector3(1, 0, 0), Color.red);
+        
     }
 
-    void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
+    void DrawMazeBackground()
     {
-        GameObject myLine = new GameObject();
-        myLine.transform.position = start;
-        myLine.AddComponent<LineRenderer>();
-        LineRenderer lr = myLine.GetComponent<LineRenderer>();
-        lr.material = new Material(Shader.Find("Materials/TestShade"));
-        lr.SetColors(color, color);
-        lr.SetWidth(0.1f, 0.1f);
-        lr.SetPosition(0, start);
-        lr.SetPosition(1, end);
-        GameObject.Destroy(myLine, duration);
+        for(int row=0; row<level.rows; row++)
+        {
+            for(int col=0; col<level.cols; col++)
+            {
+                if(levelArray[row, col] == 'm' || levelArray[row,col] == '0')
+                {
+                    GameObject wall = Instantiate(wallPrefab) as GameObject;
+                    wall.transform.position = new Vector3(col, -row, 0);
+                    //print(wall.transform.localScale.x);
+                }
+            }
+        }
     }
+
+    
 
 
 
