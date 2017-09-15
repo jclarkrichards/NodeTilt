@@ -17,7 +17,7 @@ public class NodeGroup : MonoBehaviour
     public GameObject nodePrefab;
     LevelLayout level = new LevelLayout();
     public List<Node> nodelist = new List<Node>();
-    Vector3 offset = new Vector3(-2, 3.5f, 0);
+    Vector3 offset = new Vector3(-4, 4, 0);
     Stack<Node> nodestack = new Stack<Node>();
     public char[,] levelArray;
 
@@ -31,6 +31,10 @@ public class NodeGroup : MonoBehaviour
         //CreateUnlinkedNodelist();
         CreateLinkedNodelist();
         ShowNodes();
+        print("Screen width and height");
+        print(Screen.width);
+        print(Screen.height);
+        
 	}
 	
 	
@@ -89,7 +93,7 @@ public class NodeGroup : MonoBehaviour
             {
                 if(levelArray[row, col] == '+')
                 {
-                    return new Node(row, col, offset);
+                    return CreateNode(row, col, offset);
                 }
             }
         }
@@ -194,7 +198,7 @@ public class NodeGroup : MonoBehaviour
                 else if(d == direction.UP) { row -= 1; }
                 else if(d == direction.DOWN) { row += 1; }              
             }
-            return new Node(row, col, offset);
+            return CreateNode(row, col, offset);
         }
         else
         {
@@ -216,7 +220,8 @@ public class NodeGroup : MonoBehaviour
                 char val = levelArray[row, col];
                 if (val == '+')
                 {                  
-                    nodelist.Add(new Node(row, col, offset));
+                    //nodelist.Add(new Node(row, col, offset));
+                    nodelist.Add(CreateNode(row, col, offset));
                 }
             }
         }
@@ -235,6 +240,39 @@ public class NodeGroup : MonoBehaviour
             temp.transform.position = nodelist[i].position;
         }
     }
+
+
+    Node CreateNode(int row, int col, Vector3 offset)
+    {
+        //print(new Vector3(col, row, 0));
+        //print(Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0)));
+        //print(Camera.main.WorldToScreenPoint(new Vector3(27, 28, 0)));
+        //print(Camera.main.WorldToViewportPoint(new Vector3(0, 0, 0)));
+        //print(Camera.main.WorldToViewportPoint(new Vector3(27, 28, 0)));
+        //print("\n");
+
+        Vector3 temp = Camera.main.WorldToScreenPoint(new Vector3(col, row, 0)+offset) / 4.30f;
+        Vector3 temp2 = Camera.main.ScreenToWorldPoint(temp);
+        return new Node(temp2.x, temp2.y, row, col);
+        //return new Node(row, col, offset);
+        DrawLine(new Vector3(), new Vector3(2, 2, 0), Color.red);
+        //Debug.DrawLine(Vector3.zero, new Vector3(1, 0, 0), Color.red);
+    }
+
+    void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
+    {
+        GameObject myLine = new GameObject();
+        myLine.transform.position = start;
+        myLine.AddComponent<LineRenderer>();
+        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Materials/TestShade"));
+        lr.SetColors(color, color);
+        lr.SetWidth(0.1f, 0.1f);
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+        GameObject.Destroy(myLine, duration);
+    }
+
 
 
 }

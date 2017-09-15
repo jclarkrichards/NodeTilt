@@ -12,11 +12,11 @@ public class Node
 
    
 
-    public Node(int r, int c, Vector3 offset=new Vector3())
+    public Node(float px, float py, int r, int c, Vector3 offset=new Vector3())
     {
         row = r;
         col = c;
-        position = new Vector3(c, -r, 0) + offset;       
+        position = new Vector3(px, -py, 0) + offset;       
     }
 
     public void AddNeighbor(Node node, direction D)
