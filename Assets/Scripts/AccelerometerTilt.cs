@@ -24,6 +24,8 @@ public class AccelerometerTilt : MonoBehaviour
     Node target;
     direction tiltDirection = direction.NONE;
     bool overshot_target = true;
+    [HideInInspector]
+    public int speed = 5;
 
 	// Use this for initialization
 	void Start ()
@@ -106,7 +108,7 @@ public class AccelerometerTilt : MonoBehaviour
         //print(xAxis + "   " + yAxis);
         dirvec = GetDirectionVector(dir);
         Vector3 pos = transform.position;
-        pos += dirvec * 2 * Time.deltaTime;
+        pos += dirvec * speed * Time.deltaTime;
         transform.position = pos;
 		
 	}
@@ -133,7 +135,7 @@ public class AccelerometerTilt : MonoBehaviour
     direction GetTiltDirection()
     {
         //For testing the tilt on this computer, comment out when deploying to the tablet
-        
+        /*
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
         if (xAxis > 0) { return direction.RIGHT; }
@@ -141,9 +143,9 @@ public class AccelerometerTilt : MonoBehaviour
         else if (yAxis > 0) { return direction.UP; }
         else if (yAxis < 0) { return direction.DOWN; }
         else { return direction.NONE; }
-        
+        */
         //Uncomment when deploying to the tablet.  
-        /*
+        
         if(Mathf.Abs(Input.acceleration.x) > Mathf.Abs(Input.acceleration.y))
         {
             if(Input.acceleration.x > 0)
@@ -167,7 +169,7 @@ public class AccelerometerTilt : MonoBehaviour
                 return direction.DOWN;
             }
         }
-        */
+        
     }
 
     void LinkNodes()

@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AccelerometerTilt.cs" />
+    <Compile Include="Assets\Scripts\CameraControl.cs" />
     <Compile Include="Assets\Scripts\LevelLayout.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\NodeGroup.cs" />
