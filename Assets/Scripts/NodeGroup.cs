@@ -21,7 +21,7 @@ public class NodeGroup : MonoBehaviour
     Vector3 offset = new Vector3();//-13.5f, -16, 0);
     Stack<Node> nodestack = new Stack<Node>();
     public char[,] levelArray;
-
+    List<Node> portalNodes = new List<Node>();
     
 
     private void Awake ()
@@ -49,8 +49,23 @@ public class NodeGroup : MonoBehaviour
         Camera.main.transform.position = new Vector3(13.5f, -newSize/1.25f, -10);
 
         //print(Screen.height + "  " + Camera.main.orthographicSize * 2f);
-        
-        
+        print("Portal nodes");
+        print(nodelist.Count);
+        List<int> portalList = new List<int>();
+        for(int i=0; i<nodelist.Count; i++)
+        {
+            if(nodelist[i].portal)
+            {
+                print(nodelist[i].row + ", " + nodelist[i].col);
+                portalList.Add(i);
+            }
+        }
+
+        if(portalList.Count >= 2)
+        {
+            nodelist[portalList[0]].AddPortalNeighbor(nodelist[portalList[1]]);
+            nodelist[portalList[1]].AddPortalNeighbor(nodelist[portalList[0]]);
+        }
     }
 	
 	
@@ -205,14 +220,19 @@ public class NodeGroup : MonoBehaviour
     // Follow a path UP, DOWN, LEFT, or RIGHT along '-' and '|' symbols until you reach a '+' symbol
     Node PathToFollow(direction d, int row, int col, char symbol)
     {
-        if(levelArray[row, col] == symbol || levelArray[row, col] == '+')
+        if(levelArray[row, col] == symbol || levelArray[row, col] == '+' || levelArray[row, col] == 'a')
         {
-            while(levelArray[row, col] != '+')
+            while(levelArray[row, col] != '+' && levelArray[row, col] != 'a')
             {
                 if(d == direction.LEFT) { col -= 1; }
                 else if(d == direction.RIGHT) { col += 1; }
                 else if(d == direction.UP) { row -= 1; }
                 else if(d == direction.DOWN) { row += 1; }              
+            }
+            if(levelArray[row, col] == 'a')
+            {
+                print("Hello");
+                return CreateNode(row, col, offset, true);
             }
             return CreateNode(row, col, offset);
         }
@@ -258,7 +278,7 @@ public class NodeGroup : MonoBehaviour
     }
 
 
-    Node CreateNode(int row, int col, Vector3 offset)
+    Node CreateNode(int row, int col, Vector3 offset, bool portal=false)
     {
         //print(new Vector3(col, row, 0));
         //print(Camera.main.WorldToScreenPoint(new Vector3(0, 0, 0)));
@@ -269,11 +289,12 @@ public class NodeGroup : MonoBehaviour
 
         Vector3 temp = Camera.main.WorldToScreenPoint(new Vector3(col, row, 0) + offset);// / 4.30f;
         Vector3 temp2 = Camera.main.ScreenToWorldPoint(temp);
-        return new Node(temp2.x, temp2.y, row, col);
+        return new Node(temp2.x, temp2.y, row, col, p:portal);
         //return new Node(row, col, offset);
         
     }
 
+    // A visual representation of the maze.  Doesn't affect gameplay.
     void DrawMazeBackground()
     {
         for(int row=0; row<level.rows; row++)

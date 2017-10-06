@@ -12,9 +12,10 @@ public enum direction
     NONE
 }*/
 
-// This is basically the NodeGroup class
+// This is basically the Pacman class
 public class AccelerometerTilt : MonoBehaviour
 {
+    public static AccelerometerTilt S;
     //public GameObject[] nodesObjects;
     
     //Node[] nodes; // Contains all of the nodes
@@ -24,14 +25,18 @@ public class AccelerometerTilt : MonoBehaviour
     Node target;
     direction tiltDirection = direction.NONE;
     bool overshot_target = true;
-    [HideInInspector]
-    public int speed = 5;
+    float speed = 5;
 
-	// Use this for initialization
-	void Start ()
+    private void Awake()
     {
-        print("So many nodes to choose from");
-        print(NodeGroup.S.nodelist.Count);
+        S = this;
+    }
+
+    // Use this for initialization
+    void Start ()
+    {
+        //print("So many nodes to choose from");
+        //print(NodeGroup.S.nodelist.Count);
         node = NodeGroup.S.nodelist[0];
         target = NodeGroup.S.nodelist[0];
         transform.position = node.position;
@@ -52,8 +57,8 @@ public class AccelerometerTilt : MonoBehaviour
             {
                 dir = tiltDirection;
                 target = node.neighbors[tiltDirection];
-                print("new target acquired");
-                print(target.position);
+                //print("new target acquired");
+                //print(target.position);
             }
         }
         else // We are moving from a node to another node
@@ -75,11 +80,18 @@ public class AccelerometerTilt : MonoBehaviour
             
             
             node = target;
+            if(node.portal)
+            {
+                //print("This is a portal");
+                //print("We portal to node at " + node.portalNode.row + ", " + node.portalNode.col);
+                node = node.portalNode;
+                transform.position = node.position;
+            }
             // Should we continue in this direction or stop?
             // The direction we are tilting takes precedence
             if(node.neighbors.ContainsKey(tiltDirection))
             {
-                print("Tilt direction!");
+                //print("Tilt direction!");
                 transform.position = node.position;
                 dir = tiltDirection;
                 target = node.neighbors[tiltDirection];
@@ -88,12 +100,12 @@ public class AccelerometerTilt : MonoBehaviour
             {
                 if(node.neighbors.ContainsKey(dir))
                 {
-                    print("Keep going!");
+                    //print("Keep going!");
                     target = node.neighbors[dir];
                 }
                 else
                 {
-                    print("STOP!");
+                    //print("STOP!");
                     transform.position = node.position;
                     dir = direction.NONE;
                 }
